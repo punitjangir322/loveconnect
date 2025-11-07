@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoveConnect - Dating App</title>
+    <style>
+         :root {
+            --primary: #ff5c8a;
+            --secondary: #ff9bb3;
+            --bg: #fff0f6;
+            --card: #fff;
+            --muted: #8b97a6;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: var(--bg);
+            min-height: 100vh;
+        }
+        
+        .center-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 10px;
+        }
+        
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+        
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: #fff;
+        }
+        
+        .btn-link {
+            background: transparent;
+            color: var(--primary);
+            cursor: pointer;
+        }
+        
+        .input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+        
+        h2,
+        h3 {
+            color: var(--primary);
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .tabs button {
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .tabs button.active {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: #fff;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        
+        .pcard {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+        }
+        
+        .pcard:hover {
+            transform: translateY(-5px);
+            transition: 0.3s;
+        }
+        
+        .pcard img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .pcard .info {
+            padding: 10px;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding-bottom: 10px;
+        }
+        
+        .btn-pass {
+            background: #f4f4f4;
+        }
+        
+        .btn-like {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: #fff;
+        }
+        
+        .chat-container {
+            display: flex;
+            height: 450px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .user-list {
+            width: 200px;
+            background: #fff0f6;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .user-list button {
+            width: 100%;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 5px;
+            cursor: pointer;
+        }
+        
+        .chat-window {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-left: 10px;
+        }
+        
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .message {
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            max-width: 70%;
+            word-wrap: break-word;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message .time {
+            font-size: 10px;
+            color: var(--muted);
+            text-align: right;
+        }
+        
+        .me {
+            background: linear-gradient(90deg, #ffe7ef, #ffd6e3);
+            align-self: flex-end;
+        }
+        
+        .them {
+            background: #fff;
+            align-self: flex-start;
+        }
+        
+        .input-area {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+        
+        .input-area input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-area button {
+            border-radius: 10px;
+            padding: 10px 15px;
+        }
+        
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        
+        .admin-content {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            width: 90%;
+            max-width: 900px;
+            overflow: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .small-link {
+            background: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--muted);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN PAGE -->
+    <div id="loginScreen" class="center-screen">
+        <div class="card" style="width:400px;">
+            <h2>LoveConnect</h2>
+            <div id="loginBox">
+                <input id="loginMobile" class="input" placeholder="Mobile number">
+                <input id="loginPassword" class="input" placeholder="Password" type="password">
+                <button id="doLogin" class="btn-primary" style="width:100%;">User Login</button>
+                <button id="openCreate" class="btn-link">Create Account</button>
+                <hr>
+                <h3>Admin Login</h3>
+                <input id="adminUser" class="input" placeholder="Username">
+                <input id="adminPass" class="input" placeholder="Password" type="password">
+                <button id="doAdminLogin" class="btn-primary" style="width:100%;">Admin Login</button>
+                <div class="footer">Admin: <b>admin</b> / <b>admin123</b></div>
+            </div>
+            <div id="createBox" style="display:none;">
+                <input id="cpName" class="input" placeholder="Full Name">
+                <input id="cpAge" class="input" type="number" placeholder="Age">
+                <select id="cpGender" class="input">
+        <option>Male</option><option>Female</option><option>Other</option>
+      </select>
+                <input id="cpMobile" class="input" placeholder="Mobile Number">
+                <input id="cpPassword" class="input" placeholder="Password" type="password">
+                <input id="cpPhoto" class="input" type="file" accept="image/*">
+                <button id="createAndLogin" class="btn-primary" style="width:100%;">Create & Login</button>
+                <button id="backToLogin" class="btn-link" style="width:100%;">Back to Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- USER APP -->
+    <div id="app" style="display:none;padding:20px;">
+        <div style="max-width:1100px;margin:auto;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+                <h2>Welcome, <span id="userName"></span></h2>
+                <button id="logoutBtn" class="small-link">Logout</button>
+            </div>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="discover">Discover</button>
+                <button class="tab-btn" data-tab="notifications">Notifications</button>
+                <button class="tab-btn" data-tab="chat">Chat</button>
+                <button class="tab-btn" data-tab="premium">Premium</button>
+                <button class="tab-btn" data-tab="profile">Edit Profile</button>
+            </div>
+            <div id="tabContent" style="min-height:450px;"></div>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div id="adminPanel" class="admin-panel" style="display:none;">
+        <div class="admin-content">
+            <h2>Admin Panel</h2>
+            <button id="closeAdmin" class="btn-link" style="float:right;">Close</button>
+            <h3>Users</h3>
+            <table id="adminUserTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Verified</th>
+                        <th>Premium</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // ---------- IndexedDB ----------
+        const DB_NAME = 'LoveConnectDB',
+            DB_VERSION = 1;
+        let db;
+
+        function openDB() {
+            return new Promise((res, rej) => {
+                const req = indexedDB.open(DB_NAME, DB_VERSION);
+                req.onupgradeneeded = e => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('users')) {
+                        const store = db.createObjectStore('users', {
+                            keyPath: 'id',
+                            autoIncrement: true
+                        });
+                        store.createIndex('mobile', 'mobile', {
+                            unique: true
+                        });
+                    }
+                };
+                req.onsuccess = e => {
+                    db = e.target.result;
+                    res(db);
+                };
+                req.onerror = e => rej(e);
+            });
+        }
+
+        // ---------- DB Operations ----------
+        async function addUser(u) {
+            return new Promise(r => {
+                const tx = db.transaction('users', 'readwrite');
+                tx.objectStore('users').add(u);
+                tx.oncomplete = () => r();
+            });
+        }
+        async function getUserByMobile(m) {
+            return new Promise(r => {
+                const tx = db.transaction('users', 'readonly');
+                const s = tx.objectStore('users');
+                const req = s.index('mobile').get(m);
+                req.onsuccess = () => r(req.result);
+            });
+        }
+        async function getUserById(id) {
+            return new Promise(r => {
+                const tx = db.transaction('users', 'readonly');
+                const s = tx.objectStore('users');
+                const req = s.get(id);
+                req.onsuccess = () => r(req.result);
+            });
+        }
+        async function getAllUsers() {
+            return new Promise(r => {
+                const tx = db.transaction('users', 'readonly');
+                tx.objectStore('users').getAll().onsuccess = e => r(e.target.result);
+            });
+        }
+        async function updateUser(u) {
+            return new Promise(r => {
+                const tx = db.transaction('users', 'readwrite');
+                tx.objectStore('users').put(u);
+                tx.oncomplete = () => r();
+            });
+        }
+
+        let currentUserId = null;
+        let messages = JSON.parse(localStorage.getItem('lc_messages') || '{}');
+
+        // ---------- Login / Create ----------
+        document.getElementById('openCreate').onclick = () => {
+            document.getElementById('loginBox').style.display = 'none';
+            document.getElementById('createBox').style.display = 'block';
+        };
+        document.getElementById('backToLogin').onclick = () => {
+            document.getElementById('loginBox').style.display = 'block';
+            document.getElementById('createBox').style.display = 'none';
+        };
+
+        document.getElementById('createAndLogin').onclick = async() => {
+            const name = document.getElementById('cpName').value.trim();
+            const age = parseInt(document.getElementById('cpAge').value) || 0;
+            const gender = document.getElementById('cpGender').value;
+            const mobile = document.getElementById('cpMobile').value.trim();
+            const pwd = document.getElementById('cpPassword').value;
+            const file = document.getElementById('cpPhoto').files[0];
+            if (!name || !mobile || !pwd) {
+                alert('Fill all');
+                return;
+            }
+            let photo = 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=80';
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    photo = e.target.result;
+                    addUserAndLogin(name, age, gender, mobile, pwd, photo);
+                };
+                reader.readAsDataURL(file);
+            } else addUserAndLogin(name, age, gender, mobile, pwd, photo);
+        };
+        async function addUserAndLogin(name, age, gender, mobile, pwd, photo) {
+            await addUser({
+                name,
+                age,
+                gender,
+                mobile,
+                password: pwd,
+                photo,
+                verified: false,
+                premium: false,
+                premiumGranted: 0,
+                likes: [],
+                matches: [],
+                msgCount: {}
+            });
+            const u = await getUserByMobile(mobile);
+            currentUserId = u.id;
+            showApp();
+        }
+
+        // ---------- User Login ----------
+        document.getElementById('doLogin').onclick = async() => {
+            const m = document.getElementById('loginMobile').value.trim();
+            const p = document.getElementById('loginPassword').value;
+            const u = await getUserByMobile(m);
+            if (!u || u.password !== p) {
+                alert('Invalid');
+                return;
+            }
+            currentUserId = u.id;
+            showApp();
+        };
+
+        // ---------- Admin Login ----------
+        document.getElementById('doAdminLogin').onclick = () => {
+            if (document.getElementById('adminUser').value === 'admin' && document.getElementById('adminPass').value === 'admin123') showAdminPanel();
+            else alert('Invalid');
+        };
+        document.getElementById('closeAdmin').onclick = () => {
+            document.getElementById('adminPanel').style.display = 'none';
+            refreshAdminTable();
+        };
+
+        // ---------- Logout ----------
+        document.getElementById('logoutBtn').onclick = () => {
+            currentUserId = null;
+            document.getElementById('app').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+        };
+
+        // ---------- Tabs ----------
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderTab(btn.dataset.tab);
+            };
+        });
+
+        // ---------- Show App ----------
+        async function showApp() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            const u = await getUserById(currentUserId);
+            document.getElementById('userName').innerText = u.name;
+            renderTab('discover');
+        }
+
+        // ---------- Render Tabs ----------
+        async function renderTab(tab) {
+            const tabContent = document.getElementById('tabContent');
+            tabContent.innerHTML = '';
+            const me = await getUserById(currentUserId);
+            const all = await getAllUsers();
+
+            switch (tab) {
+                case 'discover':
+                    const grid = document.createElement('div');
+                    grid.className = 'grid';
+                    let found = false;
+                    all.forEach(u => {
+                        if (u.id !== currentUserId && !me.matches.includes(u.id) && !me.likes.includes(u.id)) {
+                            found = true;
+                            const c = document.createElement('div');
+                            c.className = 'pcard';
+                            c.innerHTML = `<img src="${u.photo}"><div class="info"><h3>${u.name}, ${u.age}</h3></div>
+          <div class="actions"><button class="btn-pass">Pass</button><button class="btn-like">Like</button></div>`;
+                            c.querySelector('.btn-pass').onclick = async() => {
+                                me.likes.push(u.id);
+                                await updateUser(me);
+                                renderTab('discover');
+                            };
+                            c.querySelector('.btn-like').onclick = async() => {
+                                me.likes.push(u.id);
+                                await updateUser(me);
+                                const other = await getUserById(u.id);
+                                if (other.likes.includes(me.id)) {
+                                    me.matches.push(u.id);
+                                    other.matches.push(me.id);
+                                    await updateUser(me);
+                                    await updateUser(other);
+                                    alert('Matched!');
+                                }
+                                renderTab('discover');
+                            };
+                            grid.appendChild(c);
+                        }
+                    });
+                    if (!found) grid.innerHTML = '<h3 style="text-align:center;">No more profiles</h3>';
+                    tabContent.appendChild(grid);
+                    break;
+
+                case 'notifications':
+                    const notif = document.createElement('div');
+                    let notifFound = false;
+                    all.forEach(u => {
+                        if (u.likes.includes(me.id) && !me.matches.includes(u.id) && !me.likes.includes(u.id)) {
+                            notifFound = true;
+                            const b = document.createElement('div');
+                            b.style.display = 'flex';
+                            b.style.justifyContent = 'space-between';
+                            b.style.margin = '5px 0';
+                            b.style.padding = '10px';
+                            b.style.background = '#fff0f6';
+                            b.style.borderRadius = '8px';
+
+                            const nameSpan = document.createElement('span');
+                            nameSpan.textContent = `${u.name} liked you`;
+
+                            const likeBackBtn = document.createElement('button');
+                            likeBackBtn.textContent = 'Like Back';
+                            likeBackBtn.className = 'btn-like';
+                            likeBackBtn.onclick = async() => {
+                                me.likes.push(u.id);
+                                await updateUser(me);
+                                if (u.likes.includes(me.id)) {
+                                    me.matches.push(u.id);
+                                    u.matches.push(me.id);
+                                    await updateUser(me);
+                                    await updateUser(u);
+                                    alert(`You matched with ${u.name}!`);
+                                }
+                                renderTab('notifications');
+                            };
+                            b.appendChild(nameSpan);
+                            b.appendChild(likeBackBtn);
+                            notif.appendChild(b);
+                        }
+                    });
+                    if (!notifFound) notif.innerHTML = '<h3 style="text-align:center;">No notifications</h3>';
+                    tabContent.appendChild(notif);
+                    break;
+
+                case 'chat':
+                    renderChatTab(me, all, tabContent);
+                    break;
+
+                case 'premium':
+                    const preDiv = document.createElement('div');
+                    const today = Date.now();
+                    if (me.premium && today - me.premiumGranted <= 30 * 24 * 60 * 60 * 1000) {
+                        const days = Math.max(0, 30 - Math.floor((today - me.premiumGranted) / 86400000));
+                        preDiv.innerHTML = `<h3>Premium active</h3><p>Days remaining: ${days}</p>`;
+                    } else {
+                        me.premium = false;
+                        await updateUser(me);
+                        preDiv.innerHTML = `<h3>Upgrade to Premium - Rs 9/month</h3>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=8387011373@axl&pn=LoveConnect&tn=Premium&am=9" style="display:block;margin:10px auto;">
+        <button id="reqPremium" class="btn-primary" style="display:block;margin:auto;">Request Admin Verification</button>`;
+                        preDiv.querySelector('#reqPremium').onclick = () => {
+                            alert('Payment request sent to admin. Admin will verify and grant premium.');
+                        };
+                    }
+                    tabContent.appendChild(preDiv);
+                    break;
+
+                case 'profile':
+                    const pf = document.createElement('div');
+                    pf.className = 'card';
+                    pf.innerHTML = `<input id="pfName" class="input" value="${me.name}"><input id="pfAge" class="input" value="${me.age}"><select id="pfGender" class="input"><option>Male</option><option>Female</option><option>Other</option></select><button id="savePf" class="btn-primary">Save</button>`;
+                    pf.querySelector('#pfGender').value = me.gender;
+                    pf.querySelector('#savePf').onclick = async() => {
+                        me.name = pf.querySelector('#pfName').value;
+                        me.age = parseInt(pf.querySelector('#pfAge').value) || me.age;
+                        me.gender = pf.querySelector('#pfGender').value;
+                        await updateUser(me);
+                        alert('Saved');
+                        renderTab('profile');
+                    };
+                    tabContent.appendChild(pf);
+                    break;
+            }
+        }
+
+        // ---------- Chat ----------
+        async function renderChatTab(me, all, tabContent) {
+            const chatDiv = document.createElement('div');
+            chatDiv.className = 'chat-container';
+            const userList = document.createElement('div');
+            userList.className = 'user-list';
+            const chatWindow = document.createElement('div');
+            chatWindow.className = 'chat-window';
+            const messagesDiv = document.createElement('div');
+            messagesDiv.className = 'messages';
+            const inputArea = document.createElement('div');
+            inputArea.className = 'input-area';
+            const inputField = document.createElement('input');
+            inputField.placeholder = 'Type a message...';
+            const sendBtn = document.createElement('button');
+            sendBtn.textContent = 'Send';
+            inputArea.appendChild(inputField);
+            inputArea.appendChild(sendBtn);
+            chatWindow.appendChild(messagesDiv);
+            chatWindow.appendChild(inputArea);
+            chatDiv.appendChild(userList);
+            chatDiv.appendChild(chatWindow);
+
+            let chatWith = null;
+            if (!me.msgCount) me.msgCount = {};
+
+            me.matches.forEach(id => {
+                const u = all.find(x => x.id === id);
+                if (!u) return;
+                const btn = document.createElement('button');
+                btn.textContent = u.name;
+                btn.onclick = () => {
+                    chatWith = id;
+                    if (!me.msgCount[chatWith]) me.msgCount[chatWith] = 0;
+                    renderMessages();
+                };
+                userList.appendChild(btn);
+            });
+
+            function renderMessages() {
+                messagesDiv.innerHTML = '';
+                if (!chatWith) return;
+                const msgs = (messages[me.id] && messages[me.id][chatWith]) || [];
+                msgs.forEach(m => {
+                    const div = document.createElement('div');
+                    div.className = 'message ' + (m.from === me.id ? 'me' : 'them');
+                    div.innerHTML = `<span>${m.text}</span><span class="time">${m.time}</span>`;
+                    messagesDiv.appendChild(div);
+                });
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+                if (!me.premium && me.msgCount[chatWith] >= 10) {
+                    inputField.disabled = true;
+                    sendBtn.disabled = true;
+                    if (!document.getElementById('limitMsg')) {
+                        const warn = document.createElement('div');
+                        warn.id = 'limitMsg';
+                        warn.style.color = 'red';
+                        warn.style.textAlign = 'center';
+                        warn.innerText = 'Free message limit reached. Upgrade to Premium to continue chatting.';
+                        chatWindow.appendChild(warn);
+                    }
+                } else {
+                    inputField.disabled = false;
+                    sendBtn.disabled = false;
+                    const warn = document.getElementById('limitMsg');
+                    if (warn) warn.remove();
+                }
+            }
+
+            sendBtn.onclick = () => {
+                const txt = inputField.value.trim();
+                if (!txt || !chatWith) return;
+                if (!me.premium && me.msgCount[chatWith] >= 10) {
+                    alert('Free message limit reached!');
+                    return;
+                }
+
+                if (!messages[me.id]) messages[me.id] = {};
+                if (!messages[me.id][chatWith]) messages[me.id][chatWith] = [];
+                if (!messages[chatWith]) messages[chatWith] = {};
+                if (!messages[chatWith][me.id]) messages[chatWith][me.id] = [];
+
+                const timestamp = new Date().toLocaleTimeString();
+                const msgObj = {
+                    from: me.id,
+                    text: txt,
+                    time: timestamp
+                };
+                messages[me.id][chatWith].push(msgObj);
+                messages[chatWith][me.id].push(msgObj);
+                localStorage.setItem('lc_messages', JSON.stringify(messages));
+
+                if (!me.premium) me.msgCount[chatWith]++;
+                inputField.value = '';
+                renderMessages();
+            };
+            setInterval(renderMessages, 1000);
+            tabContent.appendChild(chatDiv);
+        }
+
+        // ---------- Admin Panel ----------
+        async function showAdminPanel() {
+            document.getElementById('adminPanel').style.display = 'flex';
+            refreshAdminTable();
+        }
+        async function refreshAdminTable() {
+            const tbody = document.querySelector('#adminUserTable tbody');
+            tbody.innerHTML = '';
+            const users = await getAllUsers();
+            users.forEach(u => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${u.id}</td><td>${u.name}</td><td>${u.mobile}</td><td>${u.verified?'Yes':'No'}</td><td>${u.premium?'Yes':'No'}</td><td></td>`;
+                const td = tr.querySelector('td:last-child');
+                const verifyBtn = document.createElement('button');
+                verifyBtn.textContent = 'Verify';
+                verifyBtn.className = 'small-link';
+                verifyBtn.onclick = async() => {
+                    u.verified = true;
+                    await updateUser(u);
+                    refreshAdminTable();
+                };
+                const blockBtn = document.createElement('button');
+                blockBtn.textContent = 'Block';
+                blockBtn.className = 'small-link';
+                blockBtn.onclick = async() => {
+                    u.verified = false;
+                    await updateUser(u);
+                    refreshAdminTable();
+                };
+                const premiumBtn = document.createElement('button');
+                premiumBtn.textContent = 'Grant Premium';
+                premiumBtn.className = 'small-link';
+                premiumBtn.onclick = async() => {
+                    u.premium = true;
+                    u.premiumGranted = Date.now();
+                    await updateUser(u);
+                    refreshAdminTable();
+                };
+                td.appendChild(verifyBtn);
+                td.appendChild(blockBtn);
+                td.appendChild(premiumBtn);
+                tbody.appendChild(tr);
+            });
+        }
+
+        openDB();
+    </script>
+</body>
+
+</html>
